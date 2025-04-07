@@ -1,5 +1,168 @@
-Estou muito feliz com o atendimento!
-O serviço foi péssimo, não recomendo.
-Achei o produto razoável, nada demais.
-Simplesmente adorei a experiência!
-Foi uma grande decepção.
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNF0esxYzh0/tOqTPozXuGQ",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/sandramastrogiacomo/analise-sentimentos-azure-ai/blob/main/inputs/frases.txt\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "QgsV0da30HAU",
+        "outputId": "8314ab93-39a8-4056-e52c-8436aae536aa"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Collecting azure-ai-textanalytics\n",
+            "  Downloading azure_ai_textanalytics-5.3.0-py3-none-any.whl.metadata (82 kB)\n",
+            "\u001b[?25l     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m0.0/82.8 kB\u001b[0m \u001b[31m?\u001b[0m eta \u001b[36m-:--:--\u001b[0m\r\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m82.8/82.8 kB\u001b[0m \u001b[31m2.9 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hRequirement already satisfied: matplotlib in /usr/local/lib/python3.11/dist-packages (3.10.0)\n",
+            "Collecting azure-core<2.0.0,>=1.24.0 (from azure-ai-textanalytics)\n",
+            "  Downloading azure_core-1.33.0-py3-none-any.whl.metadata (42 kB)\n",
+            "\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m42.6/42.6 kB\u001b[0m \u001b[31m1.7 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hCollecting azure-common~=1.1 (from azure-ai-textanalytics)\n",
+            "  Downloading azure_common-1.1.28-py2.py3-none-any.whl.metadata (5.0 kB)\n",
+            "Collecting isodate<1.0.0,>=0.6.1 (from azure-ai-textanalytics)\n",
+            "  Downloading isodate-0.7.2-py3-none-any.whl.metadata (11 kB)\n",
+            "Requirement already satisfied: typing-extensions>=4.0.1 in /usr/local/lib/python3.11/dist-packages (from azure-ai-textanalytics) (4.13.0)\n",
+            "Requirement already satisfied: contourpy>=1.0.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (1.3.1)\n",
+            "Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (0.12.1)\n",
+            "Requirement already satisfied: fonttools>=4.22.0 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (4.56.0)\n",
+            "Requirement already satisfied: kiwisolver>=1.3.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (1.4.8)\n",
+            "Requirement already satisfied: numpy>=1.23 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (2.0.2)\n",
+            "Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (24.2)\n",
+            "Requirement already satisfied: pillow>=8 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (11.1.0)\n",
+            "Requirement already satisfied: pyparsing>=2.3.1 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (3.2.3)\n",
+            "Requirement already satisfied: python-dateutil>=2.7 in /usr/local/lib/python3.11/dist-packages (from matplotlib) (2.8.2)\n",
+            "Requirement already satisfied: requests>=2.21.0 in /usr/local/lib/python3.11/dist-packages (from azure-core<2.0.0,>=1.24.0->azure-ai-textanalytics) (2.32.3)\n",
+            "Requirement already satisfied: six>=1.11.0 in /usr/local/lib/python3.11/dist-packages (from azure-core<2.0.0,>=1.24.0->azure-ai-textanalytics) (1.17.0)\n",
+            "Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.11/dist-packages (from requests>=2.21.0->azure-core<2.0.0,>=1.24.0->azure-ai-textanalytics) (3.4.1)\n",
+            "Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.11/dist-packages (from requests>=2.21.0->azure-core<2.0.0,>=1.24.0->azure-ai-textanalytics) (3.10)\n",
+            "Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.11/dist-packages (from requests>=2.21.0->azure-core<2.0.0,>=1.24.0->azure-ai-textanalytics) (2.3.0)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.11/dist-packages (from requests>=2.21.0->azure-core<2.0.0,>=1.24.0->azure-ai-textanalytics) (2025.1.31)\n",
+            "Downloading azure_ai_textanalytics-5.3.0-py3-none-any.whl (298 kB)\n",
+            "\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m298.6/298.6 kB\u001b[0m \u001b[31m13.1 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hDownloading azure_common-1.1.28-py2.py3-none-any.whl (14 kB)\n",
+            "Downloading azure_core-1.33.0-py3-none-any.whl (207 kB)\n",
+            "\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m207.1/207.1 kB\u001b[0m \u001b[31m12.4 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hDownloading isodate-0.7.2-py3-none-any.whl (22 kB)\n",
+            "Installing collected packages: azure-common, isodate, azure-core, azure-ai-textanalytics\n",
+            "Successfully installed azure-ai-textanalytics-5.3.0 azure-common-1.1.28 azure-core-1.33.0 isodate-0.7.2\n"
+          ]
+        }
+      ],
+      "source": [
+        "!pip install azure-ai-textanalytics matplotlib\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from azure.ai.textanalytics import TextAnalyticsClient\n",
+        "from azure.core.credentials import AzureKeyCredential\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "# Insira sua chave e endpoint aqui\n",
+        "key = \"Cz9NYayr9SOJoJGvesm69SliC8eO5kISEmOxEDfupk6MgG7KvwUpJQQJ99BDACZoyfiXJ3w3AAAAACOGXewy\"\n",
+        "endpoint = \"https://analise-sentimentos.openai.azure.com/\"\n",
+        "\n",
+        "credential = AzureKeyCredential(key)\n",
+        "client = TextAnalyticsClient(endpoint=endpoint, credential=credential)\n"
+      ],
+      "metadata": {
+        "id": "IygMPPva0efs"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import files\n",
+        "\n",
+        "uploaded = files.upload()\n",
+        "\n",
+        "filename = list(uploaded.keys())[0]\n",
+        "\n",
+        "with open(filename, 'r', encoding='utf-8') as f:\n",
+        "    frases = f.readlines()\n",
+        "\n",
+        "frases = [linha.strip() for linha in frases if linha.strip()]\n"
+      ],
+      "metadata": {
+        "id": "Epiuc-JY0zcB"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "response = client.analyze_sentiment(documents=frases, language=\"pt\")\n",
+        "\n",
+        "resultados = []\n",
+        "for i, doc in enumerate(response):\n",
+        "    if not doc.is_error:\n",
+        "        print(f\"Frase: {frases[i]}\")\n",
+        "        print(f\" → Sentimento: {doc.sentiment}\")\n",
+        "        resultados.append(doc.sentiment)\n",
+        "    else:\n",
+        "        print(f\"Erro na frase {i+1}: {doc.error.message}\")\n"
+      ],
+      "metadata": {
+        "id": "BokbMHiC073S"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from collections import Counter\n",
+        "\n",
+        "contagem = Counter(resultados)\n",
+        "\n",
+        "labels = contagem.keys()\n",
+        "valores = contagem.values()\n",
+        "\n",
+        "plt.figure(figsize=(6,6))\n",
+        "plt.pie(valores, labels=labels, autopct='%1.1f%%', colors=['#90ee90', '#ffcccb', '#d3d3d3'])\n",
+        "plt.title('Distribuição dos Sentimentos')\n",
+        "plt.show()\n"
+      ],
+      "metadata": {
+        "id": "nT7PNfNd0_wD"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
