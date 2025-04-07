@@ -60,6 +60,9 @@ python app.py
 ### Resultado no terminal:
 ![Resultado do terminal](prints/terminal-result.jpg)
 
+[![Abrir no Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sandramastrogiacomo/analise-sentimentos-azure-a/blob/main/analise_sentimento.ipynb)
+
+
 
 💡 Aprendizados e possibilidades
 
